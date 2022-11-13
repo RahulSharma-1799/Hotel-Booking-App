@@ -3,6 +3,8 @@ import { Tabs } from 'antd';
 import axios from 'axios';
 import Loader from '../components/Loader';
 import Error from '../components/Error';
+import Swal from 'sweetalert2'
+import { Divider, Tag } from 'antd';
 const { TabPane } = Tabs;
 
 function Profilescreen() {
@@ -19,12 +21,12 @@ function Profilescreen() {
     return (
         <div className='ml-3 mt-3'>
             <Tabs defaultActiveKey="1">
-                <TabPane tab="Profile" key="1">
+                <TabPane tab="Profile" key="1" className='bs col-md-5'>
                     <h1>My Profile</h1>
-                    <br />
-                    <h1>Name:{user.name}</h1>
-                    <h1>Email:{user.email}</h1>
-                    <h1>isAdmin:{user.isAdmin ? 'Yes' : 'No'}</h1>
+                    <hr />
+                    <p><b>Name</b> : {user.name}</p>
+                    <p><b>Email</b> : {user.email}</p>
+                    <p><b>isAdmin</b> : {user.isAdmin ? 'Yes' : 'No'}</p>
                 </TabPane>
                 <TabPane tab="Bookings" key="2">
                     <MyBookings />
@@ -60,6 +62,22 @@ export function MyBookings() {
         task();
     }, [])
 
+    async function cancelBooking(bookingid,roomid) { 
+        try {
+            setloading(true)
+            const result = (await axios.post('/api/bookings/cancelbooking', { bookingid, roomid })).data
+            console.log(result)
+            setloading(false)
+            Swal.fire('Congratulations', 'Your booking has been cancelled', 'success').then(result => {
+                window.location.reload();
+            });
+        } catch (error) {
+            console.log(error)
+            setloading(false)
+            Swal.fire('OOps', 'Something went wrong', 'error');
+        }
+    }
+
     return (
         <div>
             <div className='row'>
@@ -73,11 +91,15 @@ export function MyBookings() {
                                 <p><b>Check In</b> : {booking.fromdate}</p>
                                 <p><b>Check Out</b> : {booking.todate}</p>
                                 <p><b>Amount</b> : {booking.totalamount}</p>
-                                <p><b>Status</b> : {booking.status == 'booked' ? 'CONFIRMED' : 'CANCELLED'}</p>
+                                <p><b>Status</b> :
+                                    {booking.status == 'CANCELLED' ? (<Tag color="red">CANCELLED</Tag>) : (<Tag color="green">CONFIRMED</Tag>)}
+                                </p>
 
-                                <div className='align-center'>
-                                    <button className='btn btn-primary'>CANCEL BOOKING</button>
-                                </div>
+                                {booking.status !== 'CANCELLED' && (
+                                    <div className='text-right'>
+                                        <button className='btn btn-primary' onClick={() => { cancelBooking(booking._id, booking.roomid) }}>CANCEL BOOKING</button>
+                                    </div>
+                               )}
                             </div>
                         )
                     }))}

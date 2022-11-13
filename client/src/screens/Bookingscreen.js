@@ -6,6 +6,11 @@ import Error from '../components/Error';
 import moment from 'moment';
 import StripeCheckout from 'react-stripe-checkout';
 import Swal from 'sweetalert2';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+AOS.init({
+    duration: 1000
+});
 function getDifferenceInDays(date1, date2) {
     let a = date1.split('-');
     let b = new Date(a[1] + '-' + a[0] + '-' + a[2]);
@@ -32,7 +37,13 @@ function Bookingscreen() {
 
 
     const task = async () => {
+
+        if (!localStorage.getItem('currentUser')) {
+            window.location.href = '/login';
+        }
+
         try {
+            
             setloading(true)
             const data = (await axios.post("/api/rooms/getroombyid", { roomid: roomid })).data;
             settotalamount(data.rentperday * totaldays)
@@ -46,6 +57,7 @@ function Bookingscreen() {
     }
 
     useEffect(() => {
+        
         task();
     }, [])
 
@@ -79,7 +91,7 @@ function Bookingscreen() {
 
 
     return (
-        <div className='m-5'>
+        <div className='m-5' data-aos='flip-left'>
             {loading ? (<h1><Loader /></h1>) : room ? (<div>
 
                 <div className='row justify-content-center mt-5 bs'>
