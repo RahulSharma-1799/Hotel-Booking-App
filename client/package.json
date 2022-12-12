@@ -44,5 +44,16 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000/"
+  "proxy": "http://localhost:5000/",
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "@testing-library/react": "^13.4.0",
+    "babel-jest": "^29.3.1",
+    "jest": "^23.6.0",
+    "react-test-renderer": "^18.2.0"
+  },
+  "transform": {
+    "^.+\\.js$": "babel-jest"
+  }
 }

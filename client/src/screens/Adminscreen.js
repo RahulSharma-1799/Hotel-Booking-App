@@ -237,7 +237,7 @@ export function Addroom() {
         try {
             setloading(true)
             const result = (await axios.post('/api/rooms/addroom', newroom)).data;
-            console.log(result);
+            // console.log(result);
             setloading(false)
             Swal.fire('Congratulations', 'Your New Room Added Successfully', 'success').then(result => {
                 window.location.href='/home'
