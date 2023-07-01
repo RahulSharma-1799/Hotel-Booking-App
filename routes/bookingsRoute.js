@@ -1,10 +1,11 @@
 const express = require("express");
+
 const router = express.Router();
 const mongoose = require("mongoose");
 const Booking = require("../models/booking")
 const moment = require("moment")
 const { v4: uuidv4 } = require('uuid');
-const stripe = require('stripe')("sk_test_51IYnC0SIR2AbPxU0EiMx1fTwzbZXLbkaOcbc2cXx49528d9TGkQVjUINJfUDAnQMVaBFfBDP5xtcHCkZG1n1V3E800U7qXFmGf")
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const Room = require("../models/room")
 router.post('/bookroom', async (req, res) => {
