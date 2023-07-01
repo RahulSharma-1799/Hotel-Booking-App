@@ -1,17 +1,13 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+require("dotenv").config();
+const mongoURI = process.env.MONGODB_URL;
+const connectToMongo = async()=>{
+    try {
+        mongoose.connect(mongoURI);
+        console.log("Connected to MongoDB Database");
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-var mongoDBURL = 'mongodb+srv://root:root@cluster0.o6evl2k.mongodb.net/mern-rooms'
-
-mongoose.connect(mongoDBURL, { useUnifiedTopology: true, useNewUrlParser: true })
-
-var dbconnect = mongoose.connection
-
-dbconnect.on('error', () => {
-    console.log(`Mongo DB Connection Failed`);
-})
-
-dbconnect.on('connected', () => {
-    console.log(`Mongo DB Connection Successfull`);
-})
-
-module.exports = mongoose
+module.exports=connectToMongo;
